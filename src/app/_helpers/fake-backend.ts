@@ -6,7 +6,7 @@ import { User } from '../_models/user';
 
 
 
-const users: User[] = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }];
+const users: User[] = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User', email: 'email' }];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -24,12 +24,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             switch (true) {
                 case url.endsWith('/users/authenticate') && method === 'POST':
                     return authenticate();
+                case url.endsWith('/users/register') && method === 'POST':
+                    return register();
                 case url.endsWith('/users') && method === 'GET':
                     return getUsers();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
-            }    
+            }
         }
 
         // route functions
@@ -38,6 +40,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             const { username, password } = body;
             const user = users.find(x => x.username === username && x.password === password);
             if (!user) return error('Username or password is incorrect');
+           
             return ok({
                 id: user.id,
                 username: user.username,
@@ -47,6 +50,32 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             })
         }
 
+        function register() {
+            const { username, password, email } = body;
+            const user = users.find(x => x.username === username);
+            if (user) return error('Username already registered');
+            let newUser = { id: Math.random() *1000, username: username, password: password, firstName: 'Test', lastName: 'User',email: email }
+            
+            users.push(newUser);
+            
+            return ok({
+                id: newUser.id,
+                username: newUser.username,
+                firstName: newUser.firstName,
+                lastName: user.lastName,
+                token: generateId(10)
+            })
+
+            
+        }
+        function dec2hex (dec) {
+            return dec.toString(16).padStart(2, "0")
+          }
+        function generateId (len) {
+            var arr = new Uint8Array((len || 40) / 2)
+            window.crypto.getRandomValues(arr)
+            return Array.from(arr, dec2hex).join('')
+          }
         function getUsers() {
             if (!isLoggedIn()) return unauthorized();
             return ok(users);

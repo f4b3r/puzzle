@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent  implements OnInit {
 
   loginForm: FormGroup;
   loading = false;
@@ -21,10 +22,13 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,) { 
 
+  
         // redirect to home if already logged in
         if (this.authService.isLoggedIn) { 
           this.router.navigate(['/']);
       }
+
+      this.authService.currentUser.subscribe(user => console.log('user connected ->', user));
     }
 
     public hasError = (controlName: string, errorName: string) =>{
@@ -54,7 +58,7 @@ export class LoginComponent implements OnInit {
         .pipe(first())
         .subscribe(
             data => {
-                this.router.navigate([this.returnUrl]);
+                this.router.navigate(['/']);
             },
             error => {
                 this.error = error.error.message;

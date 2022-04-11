@@ -10,27 +10,26 @@ import { User } from '../_models/user';
 })
 export class AuthService {
 
-  constructor(public jwtHelper: JwtHelperService,private http: HttpClient) { }
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   isLoggedIn = false;
 
-  // store the URL so we can redirect after logging in
-  redirectUrl: string | null = null;
 
-  //mocked login
-  loginMock(): Observable<boolean> {
-    return of(true).pipe(
-      delay(1000),
-      tap(() => this.isLoggedIn = true)
-    );
+  constructor(public jwtHelper: JwtHelperService,private http: HttpClient) { 
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')))
+    this.currentUser = this.currentUserSubject.asObservable();
   }
+
+
+
+
 
   login(username: string, password: string) {
     return this.http.post<any>(`/users/authenticate`, { username, password })
         .pipe(map(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
+            this.isLoggedIn = true;
             this.currentUserSubject.next(user);
             return user;
         }));

@@ -3,26 +3,32 @@
       <mat-card-header>
         <mat-card-title>Register</mat-card-title>
       </mat-card-header>
-      <form >
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" >
         <mat-card-content>
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Username">
+            <input matInput placeholder="Username" formControlName="username" >
+            <mat-error *ngIf="hasError('username', 'required')">Username is required</mat-error>  
+        </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Email" formControlName="email" >
+            <mat-error *ngIf="hasError('email', 'required')">Email is required</mat-error>
           </mat-form-field>
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Email">
-          </mat-form-field>
-          <mat-form-field class="example-full-width">
-            <input type="password" matInput placeholder="Password">
-          </mat-form-field>
-          <mat-form-field class="example-full-width">
+            <input type="password" matInput placeholder="Password" formControlName="password" >
+            <mat-error *ngIf="hasError('password', 'required')">Password is required</mat-error>
+        </mat-form-field>
+          <!--<mat-form-field class="example-full-width">
             <mat-label>Choose a role...</mat-label>
             <mat-select>
               <mat-option [value]="roles" *ngFor="let roles of Roles">{{roles}}
               </mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
         </mat-card-content>
         <button mat-stroked-button color="accent" class="btn-block">Register</button>
-      </form>
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+        <div *ngIf="result" class="alert alert-success mt-3 mb-0">{{result}}</div>
+
+    </form>
     </mat-card>
   </div>

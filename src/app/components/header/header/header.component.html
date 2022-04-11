@@ -3,8 +3,13 @@
     <mat-toolbar color="primary" class="app-header" >
         <div><a href="https://www.positronx.io" target="_blank" class="positronx">Awsome GAMES</a></div>
             <span class="nav-tool-items">
-                <a mat-button  routerLink="login"  routerLinkActive="mat-raised-button" >Log in</a>
-                <a mat-button  routerLink="register" routerLinkActive="mat-raised-button">Register</a>
+                
+                <a *ngIf="!isUserLoggedIn" mat-button  routerLink="login"  routerLinkActive="mat-raised-button" >Log in</a>
+                <a *ngIf="isUserLoggedIn" mat-button  class=""  routerLinkActive="mat-raised-button" ><i class="fa-solid fa-user"></i></a>
+                
+                <a *ngIf="!isUserLoggedIn" mat-button  routerLink="register" routerLinkActive="mat-raised-button">Register</a>
+                <a *ngIf="isUserLoggedIn" mat-button  class=""  routerLinkActive="mat-raised-button" >Log out</a>
+               
             </span>
     </mat-toolbar>
 </div>
