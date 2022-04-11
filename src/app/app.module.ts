@@ -11,6 +11,8 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { MaterialModule } from './material.module';
 import { RegisterComponent } from './components/register/register.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
+import { fakeBackendProvider } from './_helpers/fake-backend';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
+    HttpClientModule,
     FormsModule, ReactiveFormsModule,
     JwtModule.forRoot({
       config: {
@@ -35,7 +38,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
      }
    })
   ],
-  providers: [],
+  providers: [fakeBackendProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
